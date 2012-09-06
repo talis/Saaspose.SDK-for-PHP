@@ -234,7 +234,7 @@ class SlideExtractor
 	}
 	
 	/*
-    * Gets placeholder count from a particular slide
+    * Gets a placeholder from a particular slide
 	* $slideNumber
 	* $placeholderIndex
 	*/
