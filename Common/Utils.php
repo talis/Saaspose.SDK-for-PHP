@@ -120,7 +120,7 @@ class Utils {
 
     
 	public static function Sign($UrlToSign) {
-        $UrlToSign = str_replace(" ", "%20", $UrlToSign);
+        //$UrlToSign = str_replace(" ", "%20", $UrlToSign);
 		// parse the url
         $url = parse_url($UrlToSign);
       
@@ -140,9 +140,9 @@ class Utils {
 
         // return $UrlToSign . "?appSID=" . $this->APPSID . "&signature=" . $encodedSignature;
         if (isset($url['query']) == "")
-            return $url["scheme"] . "://" . $url["host"] . $url["path"] . "?appSID=" . SaasposeApp::$AppSID . "&signature=" . $encodedSignature;
+            return $url["scheme"] . "://" . $url["host"] . str_replace(" ", "%20",$url["path"]) . "?appSID=" . SaasposeApp::$AppSID . "&signature=" . $encodedSignature;
         else
-            return $url["scheme"] . "://" . $url["host"] . $url["path"] . "?" . $url["query"] . "&appSID=" . SaasposeApp::$AppSID . "&signature=" . $encodedSignature;
+            return $url["scheme"] . "://" . $url["host"] . str_replace(" ", "%20",$url["path"]) . "?" . $url["query"] . "&appSID=" . SaasposeApp::$AppSID . "&signature=" . $encodedSignature;
     }
 	
     /**
