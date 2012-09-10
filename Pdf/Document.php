@@ -80,6 +80,44 @@ class Document
 		}
     }
 	
+	
+	/*
+    * Merges tow or more PDF documents
+	* @param array $sourceFiles (list of PDF files to be merged)
+	*/
+	public function MergeDocuments(array $sourceFiles = array()) {
+       try {
+		   	$mergedFileName = $this->FileName;
+			//check whether files are set or not
+			if ($mergedFileName == "")
+				throw new Exception("Output file not specified");
+			if (empty($sourceFiles))
+				throw new Exception("File to merge are not specified");
+			if (count($sourceFiles) < 2)
+				throw new Exception("Two or more files are requred to merge");
+				
+			
+			//Build JSON to post
+			$documentsList = array('List'=> $sourceFiles);
+			$json = json_encode($documentsList);
+			
+			$strURI = Product::$BaseProductUri . "/pdf/" . $mergedFileName . "/merge";
+			
+			//sign URI
+			$signedURI = Utils::Sign($strURI);
+
+			$responseStream = json_decode(Utils::processCommand($signedURI, "PUT", "json", $json));
+			
+			if($responseStream->Code == 200)
+				return true;
+			else
+				return false;			
+		}
+		catch (Exception $e) {
+			throw new Exception($e->getMessage());
+		}
+    }
+	
 	/*
     * Creates a PDF from HTML
 	* @param string $pdfFileName (name of the PDF file to create)
