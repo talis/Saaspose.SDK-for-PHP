@@ -23,13 +23,14 @@ class WordMailMerge
 			$signedURI = Utils::Sign($strURI);
 
 			$responseStream = Utils::processCommand($signedURI, "POST", "", $strXML);
-
+			$json = json_decode($responseStream);
+			
 			$v_output = Utils::ValidateOutput($responseStream);
  
 			if ($v_output === "") {
 				//Save docs on server
 				$folder = new Folder();
-				$outputStream = $folder->GetFile($fileName);
+				$outputStream = $folder->GetFile($json->Document->FileName);
 				$outputPath = SaasposeApp::$OutPutLocation . $fileName;
 				Utils::saveFile($outputStream, $outputPath);
 				return "";
@@ -47,7 +48,7 @@ class WordMailMerge
 	* @param string $fileName 
 	* @param string $strXML
 	*/
-	public function ExecuteMailMerege($fileName, $strXML) {
+	public function ExecuteMailMeregewithRegions($fileName, $strXML) {
        try {
 			//check whether files are set or not
 			if ($fileName == "")
@@ -60,13 +61,14 @@ class WordMailMerge
 			$signedURI = Utils::Sign($strURI);
 
 			$responseStream = Utils::processCommand($signedURI, "POST", "", $strXML);
-
+			$json = json_decode($responseStream);
+			
 			$v_output = Utils::ValidateOutput($responseStream);
  
 			if ($v_output === "") {
 				//Save docs on server
 				$folder = new Folder();
-				$outputStream = $folder->GetFile($fileName);
+				$outputStream = $folder->GetFile($json->Document->FileName);
 				$outputPath = SaasposeApp::$OutPutLocation . $fileName;
 				Utils::saveFile($outputStream, $outputPath);
 				return "";
