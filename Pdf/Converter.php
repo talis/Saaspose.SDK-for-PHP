@@ -109,7 +109,12 @@ class PDFConverter
  
 			if ($v_output === "") 
 			{
-				Utils::saveFile($responseStream, SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName). "." . $this->saveformat);
+				if($this->saveformat == "html")
+					$save_format = "zip";
+				else
+					$save_format = $this->saveformat;
+					
+				Utils::saveFile($responseStream, SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName). "." . $save_format);
 				return "";
 			} 
 			else 
