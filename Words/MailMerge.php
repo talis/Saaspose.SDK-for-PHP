@@ -103,9 +103,10 @@ class WordMailMerge
 			$v_output = Utils::ValidateOutput($responseStream);
  
 			if ($v_output === "") {
+				$json = json_decode($responseStream);
 				//Save docs on server
 				$folder = new Folder();
-				$outputStream = $folder->GetFile($fileName);
+				$outputStream = $folder->GetFile($json->Document->FileName);
 				$outputPath = SaasposeApp::$OutPutLocation . $fileName;
 				Utils::saveFile($outputStream, $outputPath);
 				return "";
