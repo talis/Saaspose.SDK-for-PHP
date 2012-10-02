@@ -109,7 +109,7 @@ class WordMailMerge
 				$outputPath = SaasposeApp::$OutPutLocation . $fileName;
 				Utils::saveFile($outputStream, $outputPath);
 				return "";
-			} 
+			}
 			else 
 				return $v_output;
 		}
