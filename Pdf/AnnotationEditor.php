@@ -220,6 +220,39 @@ class AnnotationEditor
 	}
 	
 	/*
+    * Checks whether selected bookmark is parent or child Gets a specfied child Bookmark for selected parent bookmark in Pdf document
+	* @param $bookmarkIndex
+	*/
+	
+	public function IsChildBookmark($bookmarkIndex)
+	{
+		try
+		{
+			//check whether file is set or not
+			if ($this->FileName == "")
+				throw new Exception("No file name specified");
+			
+			if ($bookmarkIndex == "")
+				throw new Exception("bookmark index not specified");
+				   
+			$strURI = Product::$BaseProductUri . "/pdf/" . $this->FileName . "/bookmarks/" . $bookmarkIndex;
+			 
+			$signedURI = Utils::Sign($strURI);
+
+			$responseStream = Utils::processCommand($signedURI, "GET", "", "");
+
+			$json = json_decode($responseStream);						
+			
+			return $json->Bookmark;  
+				
+		}
+		catch (Exception $e)
+		{
+			throw new Exception($e->getMessage());
+		}
+	}
+	
+	/*
     * Gets list of all the Bookmarks in a Pdf document
 	*/
 	public function GetAllBookmarks()

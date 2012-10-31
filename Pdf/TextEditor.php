@@ -119,6 +119,45 @@ class TextEditor
 		}
 	}
 	
+	
+	/*
+    * Gets count of the segments in a fragment
+	* @param number $pageNumber
+	* @param number $fragmentNumber
+	*/
+	
+	public function GetSegmentCount($pageNumber="",$fragmentNumber="")
+	{
+		try
+		{
+			//check whether file is set or not
+			if ($this->FileName == "")
+				throw new Exception("No file name specified");
+			
+			if ($pageNumber == "")
+				throw new Exception("page number not specified");
+			
+			if ($fragmentNumber == "")
+				throw new Exception("fragment number not specified");
+				
+				   
+			$strURI = Product::$BaseProductUri . "/pdf/" . $this->FileName . "/pages/" . $pageNumber . "/fragments/" . $fragmentNumber;
+			 
+			$signedURI = Utils::Sign($strURI);
+
+			$responseStream = Utils::processCommand($signedURI, "GET", "", "");
+
+			$json = json_decode($responseStream);
+			
+			return count($json->TextItems->List);
+				
+		}
+		catch (Exception $e)
+		{
+			throw new Exception($e->getMessage());
+		}
+	}
+	
 	/*
     * Gets TextFormat of a particular Fragment
 	* $pageNumber

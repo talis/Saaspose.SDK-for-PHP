@@ -480,7 +480,128 @@ class Document
 		catch (Exception $e) {
 			throw new Exception($e->getMessage());
 		}
-    }
+    }	
+	
+	/*
+    * Get all the properties of the specified document	
+	*/
+	
+	public function GetDocumentProperties(){
+		try{
+			
+			if ($this->FileName == "")
+				throw new Exception("PDF file name not specified");
+			
+			//build URI to replace image
+			$strURI = Product::$BaseProductUri . "/pdf/" . $this->FileName . "/documentProperties";
+			
+			//sign URI
+			$signedURI = Utils::Sign($strURI);
+			$responseStream = Utils::processCommand($signedURI, "GET", "", "");
+			
+			$response_arr = json_decode($responseStream);
+			
+			return $response_arr->DocumentProperties->List;			
+			
+			
+		} catch (Exception $e){
+			throw new Exception($e->getMessage());
+		}
+	}
+	
+	/*
+    * Get specified properity of the document	
+	* @param string $propertyName
+	*/
+	
+	public function GetDocumentProperty($propertyName=""){
+		try{
+			
+			if ($this->FileName == "")
+				throw new Exception("PDF file name not specified");
+				
+			if ($propertyName == "")
+				throw new Exception("Property name not specified");
+			
+			//build URI to replace image
+			$strURI = Product::$BaseProductUri . "/pdf/" . $this->FileName . "/documentProperties/" . $propertyName;
+			
+			//sign URI
+			$signedURI = Utils::Sign($strURI);
+			$responseStream = Utils::processCommand($signedURI, "GET", "", "");
+			
+			$response_arr = json_decode($responseStream);
+			
+			return $response_arr->DocumentProperty;	
+			
+			
+		} catch (Exception $e){
+			throw new Exception($e->getMessage());
+		}
+	}
+	
+	/*
+    * Set specified properity of the document	
+	* @param string $propertyName
+	* @param string $propertyValue
+	*/
+	
+	public function SetDocumentProperty($propertyName="",$propertyValue=""){
+		try{
+			
+			if ($this->FileName == "")
+				throw new Exception("PDF file name not specified");
+				
+			if ($propertyName == "")
+				throw new Exception("Property name not specified");
+			
+			//build URI to replace image
+			$strURI = Product::$BaseProductUri . "/pdf/" . $this->FileName . "/documentProperties/" . $propertyName;
+			
+			$put_arr["Value"] = $propertyValue;
+			$json = json_encode($put_arr);
+			
+			//sign URI
+			$signedURI = Utils::Sign($strURI);
+			$responseStream = Utils::processCommand($signedURI, "PUT", "json", $json);
+			
+			$response_arr = json_decode($responseStream);
+						
+			return $response_arr->DocumentProperty;	
+			
+			
+		} catch (Exception $e){
+			throw new Exception($e->getMessage());
+		}
+	}
+	
+	/*
+    * Remove all properties of the document	
+	*/
+	
+	public function RemoveAllProperties(){
+		try{
+			
+			if ($this->FileName == "")
+				throw new Exception("PDF file name not specified");
+							
+			//build URI to replace image
+			$strURI = Product::$BaseProductUri . "/pdf/" . $this->FileName . "/documentProperties";						
+			
+			//sign URI
+			$signedURI = Utils::Sign($strURI);
+			$responseStream = Utils::processCommand($signedURI, "DELETE", "", "");
+			
+			$response_arr = json_decode($responseStream);						
+						
+			return $response_arr->Code == 200?true:false;	
+			
+			
+		} catch (Exception $e){
+			throw new Exception($e->getMessage());
+		}
+	}
+	
 	
 }
 ?> 

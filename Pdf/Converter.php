@@ -124,6 +124,63 @@ class PDFConverter
 		{
 			throw new Exception($e->getMessage());
 		}  
-	}	
+	}
+	
+	/*
+    * Convert PDF to different file format without using storage
+	* $param string $inputFile
+	* @param string $outputFilename
+	* @param string $outputFormat
+	*/
+	public function ConvertLocalFile($inputFile="",$outputFilename="",$outputFormat="")
+	{
+		try
+		{
+			//check whether file is set or not
+			if ($inputFile == "")
+				throw new Exception("No file name specified");							
+			
+			if ($outputFormat == "")
+				throw new Exception("output format not specified");
+				
+				   
+			$strURI = Product::$BaseProductUri . "/pdf/convert?format=" . $outputFormat;
+			
+			if(!file_exists($inputFile))
+			{
+				throw new Exception("input file doesn't exist.");
+			}
+						
+			
+			$signedURI = Utils::Sign($strURI);
+
+			$responseStream = Utils::uploadFileBinary($signedURI, $inputFile , "xml");			
+			
+			$v_output = Utils::ValidateOutput($responseStream);			
+ 
+			if ($v_output === "") 
+			{
+				if($outputFormat == "html")
+					$save_format = "zip";
+				else
+					$save_format = $outputFormat;
+				
+				if($outputFilename == "")
+				{
+					$outputFilename = Utils::getFileName($inputFile). "." . $save_format;
+				}
+					
+				Utils::saveFile($responseStream, SaasposeApp::$OutPutLocation . $outputFilename);
+				return "";
+			} 
+			else 
+				return $v_output;
+		}
+		catch (Exception $e)
+		{
+			throw new Exception($e->getMessage());
+		}  
+	}
+		
 }
 ?>
