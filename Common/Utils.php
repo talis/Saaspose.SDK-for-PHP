@@ -141,7 +141,7 @@ class Utils {
         if (isset($url['query']) == "")
             return $url["scheme"] . "://" . $url["host"] . str_replace(" ", "%20",$url["path"]) . "?appSID=" . SaasposeApp::$AppSID . "&signature=" . $encodedSignature;
         else
-            return $url["scheme"] . "://" . $url["host"] . str_replace(" ", "%20",$url["path"]) . "?" . $url["query"] . "&appSID=" . SaasposeApp::$AppSID . "&signature=" . $encodedSignature;
+            return $url["scheme"] . "://" . $url["host"] . str_replace(" ", "%20",$url["path"]) . "?" . str_replace(" ","%20",$url["query"]) . "&appSID=" . SaasposeApp::$AppSID . "&signature=" . $encodedSignature;
     }
 	
     /**
