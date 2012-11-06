@@ -120,14 +120,13 @@ class Utils {
 
     
 	public static function Sign($UrlToSign) {
-        //$UrlToSign = str_replace(" ", "%20", $UrlToSign);
-		// parse the url
+        // parse the url
         $url = parse_url($UrlToSign);
       
         if (isset($url['query']) == "")
             $urlPartToSign = $url['path'] . "?appSID=" . SaasposeApp::$AppSID;
         else
-            $urlPartToSign = $url['path'] . "?" . $url["query"] . "&appSID=" . SaasposeApp::$AppSID;
+            $urlPartToSign = $url['path'] . "?" . str_replace(" ","%20",$url["query"]) . "&appSID=" . SaasposeApp::$AppSID;
  
         // Decode the private key into its binary format
         $decodedKey = self::decodeBase64UrlSafe(SaasposeApp::$AppKey);
