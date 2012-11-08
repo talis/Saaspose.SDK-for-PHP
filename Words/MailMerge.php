@@ -10,7 +10,7 @@ class WordMailMerge
 	* @param string $fileName 
 	* @param string $strXML
 	*/
-	public function ExecuteMailMerege($fileName, $strXML) {
+	public function ExecuteMailMerge($fileName, $strXML) {
        try {
 			//check whether files are set or not
 			if ($fileName == "")
@@ -48,7 +48,7 @@ class WordMailMerge
 	* @param string $fileName 
 	* @param string $strXML
 	*/
-	public function ExecuteMailMeregewithRegions($fileName, $strXML) {
+	public function ExecuteMailMergewithRegions($fileName, $strXML) {
        try {
 			//check whether files are set or not
 			if ($fileName == "")
