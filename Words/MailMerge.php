@@ -85,15 +85,16 @@ class WordMailMerge
     * Executes mail merge template.
 	* @param string $fileName 
 	* @param string $strXML
+	* @param string $documentFolder
 	*/
-	public function ExecuteTemplate($fileName, $strXML) {
+	public function ExecuteTemplate($fileName, $strXML, $documentFolder="") {
        try {
 			//check whether files are set or not
 			if ($fileName == "")
 				throw new Exception("File not specified");
 			
 			//build URI to execute mail merge template
-			$strURI = Product::$BaseProductUri . "/words/" . $fileName . "/executeTemplate";
+			$strURI = Product::$BaseProductUri . "/words/" . $fileName . "/executeTemplate" . ($documentFolder == "" ? "" : "?folder=" . $documentFolder);
 			
 			//sign URI
 			$signedURI = Utils::Sign($strURI);
@@ -106,7 +107,7 @@ class WordMailMerge
 				$json = json_decode($responseStream);
 				//Save docs on server
 				$folder = new Folder();
-				$outputStream = $folder->GetFile($json->Document->FileName);
+				$outputStream = $folder->GetFile(($documentFolder == "" ? $json->Document->FileName : $documentFolder . "/" . $json->Document->FileName));
 				$outputPath = SaasposeApp::$OutPutLocation . $fileName;
 				Utils::saveFile($outputStream, $outputPath);
 				return "";
