@@ -268,10 +268,8 @@ class WordDocument
  
 			if ($v_output === "") 
 			{
-				if($outputFormat == "html")
-					$save_format = "zip";
-				else
-					$save_format = $outputFormat;
+				
+				$save_format = $outputFormat;
 				
 				if($outputPath == "")
 				{
