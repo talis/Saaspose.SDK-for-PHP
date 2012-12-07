@@ -313,9 +313,8 @@ class CellsWorkbook
 			$signedURI = Utils::Sign($strURI);
 	
 			$responseStream = Utils::processCommand($signedURI, "GET");
-			
-						
-			return true;
+			$json = json_encode($responseStream);
+                        return $json;
 					
 		} catch (Exception $e) {
 			throw new Exception($e->getMessage());
@@ -371,6 +370,261 @@ class CellsWorkbook
 			return $json->Names.Count;
 					
 		} catch (Exception $e) {
+			throw new Exception($e->getMessage());
+		}
+	}
+	
+	public function EncryptWorkbook($encryptionType="XOR",$password="",$keyLength="")
+	{
+		try{
+			
+			if ($this->FileName == "")
+				throw new Exception("Base file not specified");
+			
+			//Build JSON to post
+			$fieldsArray["EncriptionType"] = $encryptionType;
+			$fieldsArray["KeyLength"] = $keyLength;
+			$fieldsArray["Password"] = $password;
+			$json = json_encode($fieldsArray);
+				
+
+			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName ."/encryption";
+			
+			$signedURI = Utils::Sign($strURI);
+
+			$responseStream = Utils::processCommand($signedURI, "POST", "json", $json);
+				
+			$json_response = json_decode($responseStream);
+
+			if($json_response->Code == 200)
+				return true;
+			else
+				return false;			
+			
+		} catch (Exception $e){
+			throw new Exception($e->getMessage());
+		}
+		
+	}
+	
+	
+	public function ProtectWorkbook($protectionType="all",$password)
+	{
+		try{
+				
+			if ($this->FileName == "")
+				throw new Exception("Base file not specified");
+				
+			//Build JSON to post
+			$fieldsArray["ProtectionType"] = $protectionType;			
+			$fieldsArray["Password"] = $password;
+			$json = json_encode($fieldsArray);
+			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName ."/protection";
+				
+			$signedURI = Utils::Sign($strURI);
+				
+			$responseStream = Utils::processCommand($signedURI, "POST", "json", $json);
+	
+			$json_response = json_decode($responseStream);
+						
+			
+			if($json_response->Code == 200)
+				return true;
+			else
+				return false;
+				
+		} catch (Exception $e){
+			throw new Exception($e->getMessage());
+		}
+	
+	}
+	
+	public function UnprotectWorkbook($password)
+	{
+		try{
+	
+			if ($this->FileName == "")
+				throw new Exception("Base file not specified");
+	
+			//Build JSON to post			
+			$fieldsArray["Password"] = $password;
+			$json = json_encode($fieldsArray);
+	
+	
+			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName ."/protection";
+	
+			$signedURI = Utils::Sign($strURI);
+	
+			$responseStream = Utils::processCommand($signedURI, "DELETE", "json", $json);
+	
+			$json_response = json_decode($responseStream);
+						
+	
+			if($json_response->Code == 200)
+				return true;
+			else
+				return false;
+	
+		} catch (Exception $e){
+			throw new Exception($e->getMessage());
+		}
+	
+	}
+	
+	public function SetModifyPassword($password)
+	{
+		try{
+	
+			if ($this->FileName == "")
+				throw new Exception("Base file not specified");
+	
+			//Build JSON to post
+			$fieldsArray["Password"] = $password;
+			$json = json_encode($fieldsArray);
+	
+	
+			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName ."/writeProtection";
+	
+			$signedURI = Utils::Sign($strURI);
+
+			$responseStream = Utils::processCommand($signedURI, "POST", "json", $json);
+			
+			$json_response = json_decode($responseStream);
+	
+	
+			if($json_response->Status == "OK")
+				return true;
+			else
+				return false;
+	
+		} catch (Exception $e){
+			throw new Exception($e->getMessage());
+		}
+	
+	}
+	
+	public function ClearModifyPassword($password)
+	{
+		try{
+	
+			if ($this->FileName == "")
+				throw new Exception("Base file not specified");
+	
+			//Build JSON to post
+			$fieldsArray["Password"] = $password;
+			$json = json_encode($fieldsArray);
+	
+	
+			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName ."/writeProtection";
+	
+			$signedURI = Utils::Sign($strURI);
+	
+			$responseStream = Utils::processCommand($signedURI, "DELETE", "json", $json);
+	
+			$json_response = json_decode($responseStream);
+	
+	
+			if($json_response->Status == "OK")
+				return true;
+			else
+				return false;
+	
+		} catch (Exception $e){
+			throw new Exception($e->getMessage());
+		}
+	
+	}
+	
+	///////new functions/////////
+	
+	public function DecryptWorkbook($password){
+		try{
+			
+			if ($this->FileName == "")
+				throw new Exception("Base file not specified");
+			
+			//Build JSON to post
+			$fieldsArray["Password"] = $password;
+			$json = json_encode($fieldsArray);
+				
+
+			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName ."/encryption";
+			
+			$signedURI = Utils::Sign($strURI);
+
+			$responseStream = Utils::processCommand($signedURI, "DELETE", "json", $json);
+				
+			$json_response = json_decode($responseStream);
+			if($json_response->Code == 200)
+				return true;
+			else
+				return false;			
+			
+		} catch (Exception $e){
+			throw new Exception($e->getMessage());
+		}
+	}
+	public function AddWorksheet($worksheetName){
+		try{
+			if ($this->FileName == "")
+				throw new Exception("Base file not specified");
+			
+			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName ."/worksheets/" . $worksheetName;
+			
+			$signedURI = Utils::Sign($strURI);
+
+			$responseStream = Utils::processCommand($signedURI, "PUT","","");
+				
+			$json_response = json_decode($responseStream);
+			if($json_response->Code == 201)
+				return true;
+			else
+				return false;			
+			
+		} catch (Exception $e){
+			throw new Exception($e->getMessage());
+		}
+	}
+	
+	public function RemoveWorksheet($worksheetName){
+		try{
+			if ($this->FileName == "")
+				throw new Exception("Base file not specified");
+			
+			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName ."/worksheets/" . $worksheetName;
+			
+			$signedURI = Utils::Sign($strURI);
+
+			$responseStream = Utils::processCommand($signedURI, "DELETE","","");
+				
+			$json_response = json_decode($responseStream);
+			if($json_response->Code == 200)
+				return true;
+			else
+				return false;			
+			
+		} catch (Exception $e){
+			throw new Exception($e->getMessage());
+		}
+	}
+	public function MergeWorkbook($mergefileName){
+		try{
+			if ($this->FileName == "")
+				throw new Exception("Base file not specified");
+			
+			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName ."/merge?mergeWith=" . $mergefileName;
+			
+			$signedURI = Utils::Sign($strURI);
+
+			$responseStream = Utils::processCommand($signedURI, "POST","","");
+				
+			$json_response = json_decode($responseStream);
+			if($json_response->Code == 200)
+				return true;
+			else
+				return false;			
+			
+		} catch (Exception $e){
 			throw new Exception($e->getMessage());
 		}
 	}
