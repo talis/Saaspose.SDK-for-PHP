@@ -487,7 +487,7 @@ class CellsWorkbook
 	
 			$signedURI = Utils::Sign($strURI);
 
-			$responseStream = Utils::processCommand($signedURI, "POST", "json", $json);
+			$responseStream = Utils::processCommand($signedURI, "PUT", "json", $json);
 			
 			$json_response = json_decode($responseStream);
 	
