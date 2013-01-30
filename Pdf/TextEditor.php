@@ -226,7 +226,7 @@ class TextEditor
 			$json = json_encode($fieldsArray);
 			
 			//Build URI to replace text
-			$strURI = Product::$BaseProductUri . "/slides/" . $this->FileName . ((isset($parameters[3]))? "/pages/" . $pageNumber: "") .
+			$strURI = Product::$BaseProductUri . "/pdf/" . $this->FileName . ((isset($parameters[3]))? "/pages/" . $pageNumber: "") .
 						"/replaceText";
 			 
 			$signedURI = Utils::Sign($strURI);
