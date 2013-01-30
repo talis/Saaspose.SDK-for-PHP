@@ -227,4 +227,3 @@ class Utils {
 		   return "";
 	}
 }
-?>

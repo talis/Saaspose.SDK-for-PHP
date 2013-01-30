@@ -6,4 +6,3 @@
 		"PPTX" => "PPTX",
 		"XPS" => "XPS"
 	);
-?> 

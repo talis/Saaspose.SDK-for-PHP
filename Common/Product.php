@@ -11,4 +11,3 @@ class Product
 
 	public static $BaseProductUri = "http://api.saaspose.com/v1.0";
 }
-?>

@@ -16,4 +16,3 @@ class SaasposeApp
 	
 	public static $OutPutLocation = "C:\\TempFiles\\";
 }
-?>
