@@ -64,14 +64,14 @@ The Saaspose.SDK for PHP allows you to save the output files at your specified l
 
 ###Prerequisites
 
-PHP version 5.3.8
-Extensions (php_curl & php_json)
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
 ###Help Material
 
 You may get help regarding Saaspose API or Saaspose.SDK for PHP on [www.saaspose.com](http://www.saaspose.com).
 
-##How to use Saaspose.SDK for PHP?
+##How to use Saaspose.SDK for Android?
 
 Please see the Saaaspose.SDK for .NET Examples sections in the [Documentation](http://www.saaspose.com/docs).
 
