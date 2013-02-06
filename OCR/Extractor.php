@@ -1,4 +1,15 @@
 <?php
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * Description of Extractor
+ *
+ * @author awaistoor
+ */
 class Extractor {
     //put your code here
     public function __construct() {
@@ -137,3 +148,5 @@ class Extractor {
                 }
         }
 }
+
+?>
