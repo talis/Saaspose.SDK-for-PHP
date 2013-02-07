@@ -170,6 +170,96 @@ class WordDocument
 		}
 	}
 	
+	public function ProtectDocument($password, $protectionType = 'AllowOnlyComments') {
+        try {
+            if ($this->FileName == "") {
+                throw new Exception("Base file not specified");
+            }
+            if ($password == "") {
+                throw new Exception("Please Specify A Password");
+            }
+            $fieldsArray = array('Password' => $password, 'ProtectionType' => $protectionType);
+            $json = json_encode($fieldsArray);
+            $strURI = Product::$BaseProductUri . "/words/" . $this->FileName . "/protection";
+            $signedURI = Utils::Sign($strURI);
+            $responseStream = Utils::processCommand($signedURI, "PUT", "json", $json);
+            $v_output = Utils::ValidateOutput($responseStream);
+            if ($v_output === "") {
+                $strURI = Product::$BaseProductUri . "/storage/file/" . $this->FileName;
+                $signedURI = Utils::Sign($strURI);
+                $responseStream = Utils::processCommand($signedURI, "GET", "", "");
+                $outputFile = SaasposeApp::$OutPutLocation . $this->FileName;
+                Utils::saveFile($responseStream, $outputFile);
+                return $outputFile;
+            }
+            else
+                return $v_output;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function UnprotectDocument($password, $protectionType = 'AllowOnlyComments') {
+        try {
+            if ($this->FileName == "") {
+                throw new Exception("Base file not specified");
+            }
+            if ($password == "") {
+                throw new Exception("Please Specify A Password");
+            }
+            $fieldsArray = array('Password' => $password, 'ProtectionType' => $protectionType);
+            $json = json_encode($fieldsArray);
+            $strURI = Product::$BaseProductUri . "/words/" . $this->FileName . "/protection";
+            $signedURI = Utils::Sign($strURI);
+            $responseStream = Utils::processCommand($signedURI, "DELETE", "json", $json);
+            $v_output = Utils::ValidateOutput($responseStream);
+            if ($v_output === "") {
+                $strURI = Product::$BaseProductUri . "/storage/file/" . $this->FileName;
+                $signedURI = Utils::Sign($strURI);
+                $responseStream = Utils::processCommand($signedURI, "GET", "", "");
+                $outputFile = SaasposeApp::$OutPutLocation . $this->FileName;
+                Utils::saveFile($responseStream, $outputFile);
+                return $outputFile;
+            }
+            else
+                return $v_output;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function UpdateProtection($old_password, $new_password, $protection_type = 'AllowOnlyComments') {
+        try {
+            if ($this->FileName == "") {
+                throw new Exception("Base file not specified");
+            }
+            if ($old_password == "") {
+                throw new Exception("Please Specify Old Password");
+            }
+            if ($new_password == "") {
+                throw new Exception("Please Specify New Password");
+            }
+            $fieldsArray = array('Password' => $old_password, 'NewPassword' => $new_password, 'ProtectionType' => $protection_type);
+            $json = json_encode($fieldsArray);
+            $strURI = Product::$BaseProductUri . "/words/" . $this->FileName . "/protection";
+            $signedURI = Utils::Sign($strURI);
+            $responseStream = Utils::processCommand($signedURI, "POST", "json", $json);
+            $v_output = Utils::ValidateOutput($responseStream);
+            if ($v_output === "") {
+                $strURI = Product::$BaseProductUri . "/storage/file/" . $this->FileName;
+                $signedURI = Utils::Sign($strURI);
+                $responseStream = Utils::processCommand($signedURI, "GET", "", "");
+                $outputFile = SaasposeApp::$OutPutLocation . $this->FileName;
+                Utils::saveFile($responseStream, $outputFile);
+                return $outputFile;
+            }
+            else
+                return $v_output;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+	
 	/*
     * Delete a document property
 	@param string $propertyName
