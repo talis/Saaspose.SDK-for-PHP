@@ -7,6 +7,7 @@
 	require_once('Words/Converter.php');
 	require_once('Words/SaveFormat.php');
 	require_once('Words/Extractor.php');
+	require_once('Words/MailMerge.php');
 	require_once('Cells/Converter.php');
 	require_once('Cells/Workbook.php');
 	require_once('Cells/Worksheet.php');
