@@ -17,6 +17,7 @@
 	require_once('Pdf/SaveFormat.php');
 	require_once('Pdf/AnnotationEditor.php');	
 	require_once('Pdf/Extractor.php');
+	require_once('Pdf/TextEditor.php');
 	require_once('Slides/Document.php');
 	require_once('Slides/Converter.php');
 	require_once('Slides/SaveFormat.php');
