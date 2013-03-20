@@ -1,332 +1,400 @@
 <?php
+
 /*
-* converts pages or document into different formats
-*/
-class CellsConverter
-{
-	public $FileName = "";
-	public $WorksheetName = "";
-	public $saveformat = "";
-		
-	public function CellsConverter()
-	{
-		$parameters = func_get_args();
-		
-		//set default values
-		if(isset($parameters[0]))
-		{
-			$this->FileName = $parameters[0];
-		}
-		if(isset($parameters[1]))
-		{
-			$this->WorksheetName =  $parameters[1];
-		}
-		$this->saveformat =  "xls";
-	}
-	
-	/*
-    * converts a document to saveformat
-	*/
-	public function Convert(){
-		try{
-			//check whether file is set or not
-			if ($this->FileName == "")
-				throw new Exception("No file name specified");
-			
-			//Build URI
-			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "?format=" . $this->saveformat;
-			
-			//Sign URI
-			$signedURI = Utils::Sign($strURI);
+ * converts pages or document into different formats
+ */
 
-			//Send request and receive response stream
-			$responseStream = Utils::processCommand($signedURI, "GET", "", "");
+class CellsConverter {
 
-			//Validate output
-			$v_output = Utils::ValidateOutput($responseStream);
- 
-			if ($v_output === "") {
-				//Save ouput file
-				$outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName). "." . $this->saveformat;
-				Utils::saveFile($responseStream, $outputPath);
-				return "";
-			} 
-			else 
-				return $v_output;
-		} catch (Exception $e){
-			throw new Exception($e->getMessage());
-		}  
-	}
-	
-	/*
-    * converts a sheet to image
-	* @param string $worksheetName
-	* @param string $imageFormat
-	*/
-	public function ConvertToImage($imageFormat, $worksheetName){
-		try{
-			//check whether file and sheet is set or not
-			if ($this->FileName == "")
-				throw new Exception("No file name specified");
-			
-			//Build URI
-			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "/worksheets/" . 
-			          $worksheetName . "?format=" . $imageFormat;
-			
-			//Sign URI
-			$signedURI = Utils::Sign($strURI);
+    public $FileName = "";
+    public $WorksheetName = "";
+    public $saveformat = "";
 
-			//Send request and receive response stream
-			$responseStream = Utils::processCommand($signedURI, "GET", "", "");
+    public function CellsConverter() {
+        $parameters = func_get_args();
 
-			//Validate output
-			$v_output = Utils::ValidateOutput($responseStream);
- 
-			if ($v_output === "") {
-				//Save ouput file
-				$outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName). 
-				"_" . $worksheetName . "." . $imageFormat;
-				Utils::saveFile($responseStream, $outputPath);
-				return "";
-			} 
-			else 
-				return $v_output;
-		} catch (Exception $e){
-			throw new Exception($e->getMessage());
-		}  
-	}
+//set default values
+        if (isset($parameters[0])) {
+            $this->FileName = $parameters[0];
+        }
+        if (isset($parameters[1])) {
+            $this->WorksheetName = $parameters[1];
+        }
+        $this->saveformat = "xls";
+    }
 
-	/*
-    * converts a document to outputFormat
-	* @param string $outputFormat
-	*/
-	public function Save($outputFormat){
-		try{
-			//check whether file is set or not
-			if ($this->FileName == "")
-				throw new Exception("No file name specified");
-			
-			//Build URI
-			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "?format=" . $outputFormat;
-			
-			//Sign URI
-			$signedURI = Utils::Sign($strURI);
+    /*
+     * converts a document to saveformat
+     */
 
-			//Send request and receive response stream
-			$responseStream = Utils::processCommand($signedURI, "GET", "", "");
+    public function Convert() {
+        try {
+//check whether file is set or not
+            if ($this->FileName == "")
+                throw new Exception("No file name specified");
 
-			//Validate output
-			$v_output = Utils::ValidateOutput($responseStream);
- 
-			if ($v_output === "") {
-				//Save ouput file
-				$outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName). "." . $outputFormat;
-				Utils::saveFile($responseStream, $outputPath);
-				return $outputPath;
-			} 
-			else 
-				return $v_output;
-		} catch (Exception $e){
-			throw new Exception($e->getMessage());
-		}  
-	}
+//Build URI
+            $strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "?format=" . $this->saveformat;
 
-	/*
-    * converts a sheet to image
-	* @param string $imageFormat
-	*/
-	public function WorksheetToImage($imageFormat){
-		try{
-			//check whether file and sheet is set or not
-			if ($this->FileName == "")
-				throw new Exception("No file name specified");
-			if ($this->WorksheetName == "")
-				throw new Exception("No worksheet specified");
-			
-			//Build URI
-			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "/worksheets/" . 
-			          $this->WorksheetName . "?format=" . $imageFormat;
-			
-			//Sign URI
-			$signedURI = Utils::Sign($strURI);
+//Sign URI
+            $signedURI = Utils::Sign($strURI);
 
-			//Send request and receive response stream
-			$responseStream = Utils::processCommand($signedURI, "GET", "", "");
+//Send request and receive response stream
+            $responseStream = Utils::processCommand($signedURI, "GET", "", "");
 
-			//Validate output
-			$v_output = Utils::ValidateOutput($responseStream);
- 
-			if ($v_output === "") {
-				//Save ouput file
-				$outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName). 
-				"_" . $this->WorksheetName . "." . $imageFormat;
-				Utils::saveFile($responseStream, $outputPath);
-				return $outputPath;
-			} 
-			else 
-				return $v_output;
-		} catch (Exception $e){
-			throw new Exception($e->getMessage());
-		}  
-	}
+//Validate output
+            $v_output = Utils::ValidateOutput($responseStream);
 
-	/*
-    * saves a specific picture from a specific sheet as image
-	* @param $pictureIndex
-	* @param $imageFormat
-	*/
-	public function PictureToImage($pictureIndex, $imageFormat){
-		try{
-			//check whether file and sheet is set or not
-			if ($this->FileName == "")
-				throw new Exception("No file name specified");
-			if ($this->WorksheetName == "")
-				throw new Exception("No worksheet specified");
-			
-			//Build URI
-			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "/worksheets/" . 
-			          $this->WorksheetName . "/pictures/" . $pictureIndex . "?format=" . $imageFormat;
-			
-			//Sign URI
-			$signedURI = Utils::Sign($strURI);
+            if ($v_output === "") {
+//Save ouput file
+                $outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName) . "." . $this->saveformat;
+                Utils::saveFile($responseStream, $outputPath);
+                return "";
+            }
+            else
+                return $v_output;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 
-			//Send request and receive response stream
-			$responseStream = Utils::processCommand($signedURI, "GET", "", "");
+    /*
+     * converts a sheet to image
+     * @param string $worksheetName
+     * @param string $imageFormat
+     */
 
-			//Validate output
-			$v_output = Utils::ValidateOutput($responseStream);
- 
-			if ($v_output === "") {
-				//Save ouput file
-				$outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName). 
-				"_" . $this->WorksheetName . "." . $imageFormat;
-				Utils::saveFile($responseStream, $outputPath);
-				return $outputPath;
-			} 
-			else 
-				return $v_output;
-		} catch (Exception $e){
-			throw new Exception($e->getMessage());
-		}  
-	}
+    public function ConvertToImage($imageFormat, $worksheetName) {
+        try {
+//check whether file and sheet is set or not
+            if ($this->FileName == "")
+                throw new Exception("No file name specified");
 
-	/*
-    * saves a specific OleObject from a specific sheet as image
-	* @param $objectIndex
-	* @param $imageFormat
-	*/
-	public function OleObjectToImage($objectIndex, $imageFormat){
-		try{
-			//check whether file and sheet is set or not
-			if ($this->FileName == "")
-				throw new Exception("No file name specified");
-			if ($this->WorksheetName == "")
-				throw new Exception("No worksheet specified");
-			
-			//Build URI
-			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "/worksheets/" . 
-			          $this->WorksheetName . "/oleobjects/" . $objectIndex . "?format=" . $imageFormat;
-			
-			//Sign URI
-			$signedURI = Utils::Sign($strURI);
+//Build URI
+            $strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "/worksheets/" .
+                    $worksheetName . "?format=" . $imageFormat;
 
-			//Send request and receive response stream
-			$responseStream = Utils::processCommand($signedURI, "GET", "", "");
+//Sign URI
+            $signedURI = Utils::Sign($strURI);
 
-			//Validate output
-			$v_output = Utils::ValidateOutput($responseStream);
- 
-			if ($v_output === "") {
-				//Save ouput file
-				$outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName). 
-				"_" . $this->WorksheetName . "." . $imageFormat;
-				Utils::saveFile($responseStream, $outputPath);
-				return $outputPath;
-			} 
-			else 
-				return $v_output;
-		} catch (Exception $e){
-			throw new Exception($e->getMessage());
-		}  
-	}	
-	
-	/*
-    * saves a specific chart from a specific sheet as image
-	* @param $chartIndex
-	* @param $imageFormat
-	*/
-	public function ChartToImage($chartIndex, $imageFormat){
-		try{
-			//check whether file and sheet is set or not
-			if ($this->FileName == "")
-				throw new Exception("No file name specified");
-			if ($this->WorksheetName == "")
-				throw new Exception("No worksheet specified");
-			
-			//Build URI
-			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "/worksheets/" . 
-			          $this->WorksheetName . "/charts/" . $chartIndex . "?format=" . $imageFormat;
-			
-			//Sign URI
-			$signedURI = Utils::Sign($strURI);
+//Send request and receive response stream
+            $responseStream = Utils::processCommand($signedURI, "GET", "", "");
 
-			//Send request and receive response stream
-			$responseStream = Utils::processCommand($signedURI, "GET", "", "");
+//Validate output
+            $v_output = Utils::ValidateOutput($responseStream);
 
-			//Validate output
-			$v_output = Utils::ValidateOutput($responseStream);
- 
-			if ($v_output === "") {
-				//Save ouput file
-				$outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName). 
-				"_" . $this->WorksheetName . "." . $imageFormat;
-				Utils::saveFile($responseStream, $outputPath);
-				return $outputPath;
-			} 
-			else 
-				return $v_output;
-		} catch (Exception $e){
-			throw new Exception($e->getMessage());
-		}  
-	}
-	
-	/*
-    * saves a specific auto-shape from a specific sheet as image
-	* @param $shapeIndex
-	* @param $imageFormat
-	*/
-	public function AutoShapeToImage($shapeIndex, $imageFormat){
-		try{
-			//check whether file and sheet is set or not
-			if ($this->FileName == "")
-				throw new Exception("No file name specified");
-			if ($this->WorksheetName == "")
-				throw new Exception("No worksheet specified");
-			
-			//Build URI
-			$strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "/worksheets/" . 
-			          $this->WorksheetName . "/autoshapes/" . $shapeIndex . "?format=" . $imageFormat;
-			
-			//Sign URI
-			$signedURI = Utils::Sign($strURI);
+            if ($v_output === "") {
+//Save ouput file
+                $outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName) .
+                        "_" . $worksheetName . "." . $imageFormat;
+                Utils::saveFile($responseStream, $outputPath);
+                return "";
+            }
+            else
+                return $v_output;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 
-			//Send request and receive response stream
-			$responseStream = Utils::processCommand($signedURI, "GET", "", "");
+    /*
+     * converts a document to outputFormat
+     * @param string $outputFormat
+     */
 
-			//Validate output
-			$v_output = Utils::ValidateOutput($responseStream);
- 
-			if ($v_output === "") {
-				//Save ouput file
-				$outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName). 
-				"_" . $this->WorksheetName . "." . $imageFormat;
-				Utils::saveFile($responseStream, $outputPath);
-				return $outputPath;
-			} 
-			else 
-				return $v_output;
-		} catch (Exception $e){
-			throw new Exception($e->getMessage());
-		}  
-	}
+    public function Save($outputFormat) {
+        try {
+//check whether file is set or not
+            if ($this->FileName == "")
+                throw new Exception("No file name specified");
+
+//Build URI
+            $strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "?format=" . $outputFormat;
+
+//Sign URI
+            $signedURI = Utils::Sign($strURI);
+
+//Send request and receive response stream
+            $responseStream = Utils::processCommand($signedURI, "GET", "", "");
+
+//Validate output
+            $v_output = Utils::ValidateOutput($responseStream);
+
+            if ($v_output === "") {
+//Save ouput file
+                $outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName) . "." . $outputFormat;
+                Utils::saveFile($responseStream, $outputPath);
+                return $outputPath;
+            }
+            else
+                return $v_output;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /*
+     * converts a sheet to image
+     * @param string $imageFormat
+     */
+
+    public function WorksheetToImage($imageFormat) {
+        try {
+//check whether file and sheet is set or not
+            if ($this->FileName == "")
+                throw new Exception("No file name specified");
+            if ($this->WorksheetName == "")
+                throw new Exception("No worksheet specified");
+
+//Build URI
+            $strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "/worksheets/" .
+                    $this->WorksheetName . "?format=" . $imageFormat;
+
+//Sign URI
+            $signedURI = Utils::Sign($strURI);
+
+//Send request and receive response stream
+            $responseStream = Utils::processCommand($signedURI, "GET", "", "");
+
+//Validate output
+            $v_output = Utils::ValidateOutput($responseStream);
+
+            if ($v_output === "") {
+//Save ouput file
+                $outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName) .
+                        "_" . $this->WorksheetName . "." . $imageFormat;
+                Utils::saveFile($responseStream, $outputPath);
+                return $outputPath;
+            }
+            else
+                return $v_output;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /*
+     * saves a specific picture from a specific sheet as image
+     * @param $pictureIndex
+     * @param $imageFormat
+     */
+
+    public function PictureToImage($pictureIndex, $imageFormat) {
+        try {
+//check whether file and sheet is set or not
+            if ($this->FileName == "")
+                throw new Exception("No file name specified");
+            if ($this->WorksheetName == "")
+                throw new Exception("No worksheet specified");
+
+//Build URI
+            $strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "/worksheets/" .
+                    $this->WorksheetName . "/pictures/" . $pictureIndex . "?format=" . $imageFormat;
+
+//Sign URI
+            $signedURI = Utils::Sign($strURI);
+
+//Send request and receive response stream
+            $responseStream = Utils::processCommand($signedURI, "GET", "", "");
+
+//Validate output
+            $v_output = Utils::ValidateOutput($responseStream);
+
+            if ($v_output === "") {
+//Save ouput file
+                $outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName) .
+                        "_" . $this->WorksheetName . "." . $imageFormat;
+                Utils::saveFile($responseStream, $outputPath);
+                return $outputPath;
+            }
+            else
+                return $v_output;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /*
+     * saves a specific OleObject from a specific sheet as image
+     * @param $objectIndex
+     * @param $imageFormat
+     */
+
+    public function OleObjectToImage($objectIndex, $imageFormat) {
+        try {
+//check whether file and sheet is set or not
+            if ($this->FileName == "")
+                throw new Exception("No file name specified");
+            if ($this->WorksheetName == "")
+                throw new Exception("No worksheet specified");
+
+//Build URI
+            $strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "/worksheets/" .
+                    $this->WorksheetName . "/oleobjects/" . $objectIndex . "?format=" . $imageFormat;
+
+//Sign URI
+            $signedURI = Utils::Sign($strURI);
+
+//Send request and receive response stream
+            $responseStream = Utils::processCommand($signedURI, "GET", "", "");
+
+//Validate output
+            $v_output = Utils::ValidateOutput($responseStream);
+
+            if ($v_output === "") {
+//Save ouput file
+                $outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName) .
+                        "_" . $this->WorksheetName . "." . $imageFormat;
+                Utils::saveFile($responseStream, $outputPath);
+                return $outputPath;
+            }
+            else
+                return $v_output;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /*
+     * saves a specific chart from a specific sheet as image
+     * @param $chartIndex
+     * @param $imageFormat
+     */
+
+    public function ChartToImage($chartIndex, $imageFormat) {
+        try {
+//check whether file and sheet is set or not
+            if ($this->FileName == "")
+                throw new Exception("No file name specified");
+            if ($this->WorksheetName == "")
+                throw new Exception("No worksheet specified");
+
+//Build URI
+            $strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "/worksheets/" .
+                    $this->WorksheetName . "/charts/" . $chartIndex . "?format=" . $imageFormat;
+
+//Sign URI
+            $signedURI = Utils::Sign($strURI);
+
+//Send request and receive response stream
+            $responseStream = Utils::processCommand($signedURI, "GET", "", "");
+
+//Validate output
+            $v_output = Utils::ValidateOutput($responseStream);
+
+            if ($v_output === "") {
+//Save ouput file
+                $outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName) .
+                        "_" . $this->WorksheetName . "." . $imageFormat;
+                Utils::saveFile($responseStream, $outputPath);
+                return $outputPath;
+            }
+            else
+                return $v_output;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /*
+     * saves a specific auto-shape from a specific sheet as image
+     * @param $shapeIndex
+     * @param $imageFormat
+     */
+
+    public function AutoShapeToImage($shapeIndex, $imageFormat) {
+        try {
+//check whether file and sheet is set or not
+            if ($this->FileName == "")
+                throw new Exception("No file name specified");
+            if ($this->WorksheetName == "")
+                throw new Exception("No worksheet specified");
+
+//Build URI
+            $strURI = Product::$BaseProductUri . "/cells/" . $this->FileName . "/worksheets/" .
+                    $this->WorksheetName . "/autoshapes/" . $shapeIndex . "?format=" . $imageFormat;
+
+//Sign URI
+            $signedURI = Utils::Sign($strURI);
+
+//Send request and receive response stream
+            $responseStream = Utils::processCommand($signedURI, "GET", "", "");
+
+//Validate output
+            $v_output = Utils::ValidateOutput($responseStream);
+
+            if ($v_output === "") {
+//Save ouput file
+                $outputPath = SaasposeApp::$OutPutLocation . Utils::getFileName($this->FileName) .
+                        "_" . $this->WorksheetName . "." . $imageFormat;
+                Utils::saveFile($responseStream, $outputPath);
+                return $outputPath;
+            }
+            else
+                return $v_output;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function ConvertLocalFile($input_file, $output_file, $save_format) {
+        try {
+            if ($input_file == "") {
+                throw new Exception("Please Specify Input File Name along with path");
+            }
+            if ($output_file == "") {
+                throw new Exception("Please Specify Output File Name along with Extension");
+            }
+            if ($save_format == "") {
+                throw new Exception("Please Specify a Save Format");
+            }
+            $str_uri = Product::$BaseProductUri + "/cells/convert?format=" + $save_format;
+            $signed_uri = Utils::Sign($str_uri);
+            if (!file_exists($input_file)) {
+                throw new Exception("Input File Doesn't Exists");
+            }
+            $responseStream = Utils::uploadFileBinary($signed_uri, $input_file, "xml");
+            $v_output = Utils::ValidateOutput($responseStream);
+
+            if ($v_output === "") {
+                if ($save_format == "html")
+                    $output_format = "zip";
+                else
+                    $output_format = $save_format;
+
+                if ($output_file == "") {
+                    $outputFilename = Utils::getFileName($input_file) . "." . $output_format;
+                }
+                Utils::saveFile($responseStream, SaasposeApp::$OutPutLocation . $outputFilename);
+                return "";
+            } else {
+                return $v_output;
+            }
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function ConvertLocalFile($input_stream, $save_format) {
+        try {
+            $str_uri = Product::$BaseProductUri + "/cells/convert?format=" + $save_format;
+            $signed_uri = Utils::Sign($str_uri);
+            $response_stream = Utils::processCommand($signed_uri, "PUT", $input_stream);
+            $v_output = Utils::ValidateOutput($response_stream);
+            if ($v_output == "") {
+                if ($save_format == "html") {
+                    $output_format = "zip";
+                } else {
+                    $output_format = $save_format;
+                }
+                Utils::saveFile($response_stream, SaasposeApp::$OutPutLocation . $this->FileName . "." . $save_format);
+                return "";
+            } else {
+                return $v_output;
+            }
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
 }
