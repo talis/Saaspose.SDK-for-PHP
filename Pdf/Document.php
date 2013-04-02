@@ -594,5 +594,83 @@ class Document {
             throw new Exception($e->getMessage());
         }
     }
+	
+	public function SplitAllPages() {
+       try {
+           if ($this->FileName == "") {
+               throw new Exception("File name not specified");
+           }
+           $strURI = Product::$BaseProductUri . "/pdf/" . $this->FileName . "/split";
+           $signedURI = Utils::Sign($strURI);
+           $responseStream = Utils::processCommand($signedURI, "POST", "", "");
+           $json = json_decode($responseStream);
+           $i = 1;
+           foreach ($json->Result->Documents as $splitPage) {
+               $splitFileName = basename($splitPage->Href);
+               $strURI = Product::$BaseProductUri . '/storage/file/' . $splitFileName;
+               $signedURI = Utils::Sign($strURI);
+               $responseStream = Utils::processCommand($signedURI, "GET", "", "");
+               $fileName = $this->FileName . "_" . $i . ".pdf";
+               $outputFile = SaasposeApp::$OutPutLocation . $fileName;
+               Utils::saveFile($responseStream, $outputFile);
+               echo $outputFile;
+               $i++;
+           }
+       } catch (Exception $e) {
+           throw new Exception($e->getMessage());
+       }
+   }
+
+   public function SplitPages($from, $to) {
+       try {
+           if ($this->FileName == "") {
+               throw new Exception("File name not specified");
+           }
+           $strURI = Product::$BaseProductUri . "/pdf/" . $this->FileName . "/split?from=" . $from . "&to=" . $to;
+           $signedURI = Utils::Sign($strURI);
+           $responseStream = Utils::processCommand($signedURI, "POST", "", "");
+           $json = json_decode($responseStream);
+           $i = 1;
+           foreach ($json->Result->Documents as $splitPage) {
+               $splitFileName = basename($splitPage->Href);
+               $strURI = Product::$BaseProductUri . '/storage/file/' . $splitFileName;
+               $signedURI = Utils::Sign($strURI);
+               $responseStream = Utils::processCommand($signedURI, "GET", "", "");
+               $fileName = $this->FileName . "_" . $i . ".pdf";
+               $outputFile = SaasposeApp::$OutPutLocation . $fileName;
+               Utils::saveFile($responseStream, $outputFile);
+               echo $outputFile;
+               $i++;
+           }
+       } catch (Exception $e) {
+           throw new Exception($e->getMessage());
+       }
+   }
+
+   public function SplitPagesToAnyFormat($from, $to, $format) {
+       try {
+           if ($this->FileName == "") {
+               throw new Exception("File name not specified");
+           }
+           $strURI = Product::$BaseProductUri . "/pdf/" . $this->FileName . "/split?from=" . $from . "&to=" . $to . "&format=" . $format;
+           $signedURI = Utils::Sign($strURI);
+           $responseStream = Utils::processCommand($signedURI, "POST", "", "");
+           $json = json_decode($responseStream);
+           $i = 1;
+           foreach ($json->Result->Documents as $splitPage) {
+               $splitFileName = basename($splitPage->Href);
+               $strURI = Product::$BaseProductUri . '/storage/file/' . $splitFileName;
+               $signedURI = Utils::Sign($strURI);
+               $responseStream = Utils::processCommand($signedURI, "GET", "", "");
+               $fileName = $this->FileName . "_" . $i . "." . $format;
+               $outputFile = SaasposeApp::$OutPutLocation . $fileName;
+               Utils::saveFile($responseStream, $outputFile);
+               echo $outputFile;
+               $i++;
+           }
+       } catch (Exception $e) {
+           throw new Exception($e->getMessage());
+       }
+   }
 
 }
