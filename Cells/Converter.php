@@ -374,27 +374,4 @@ class CellsConverter {
             throw new Exception($e->getMessage());
         }
     }
-
-    public function ConvertLocalFile($input_stream, $save_format) {
-        try {
-            $str_uri = Product::$BaseProductUri + "/cells/convert?format=" + $save_format;
-            $signed_uri = Utils::Sign($str_uri);
-            $response_stream = Utils::processCommand($signed_uri, "PUT", $input_stream);
-            $v_output = Utils::ValidateOutput($response_stream);
-            if ($v_output == "") {
-                if ($save_format == "html") {
-                    $output_format = "zip";
-                } else {
-                    $output_format = $save_format;
-                }
-                Utils::saveFile($response_stream, SaasposeApp::$OutPutLocation . $this->FileName . "." . $save_format);
-                return "";
-            } else {
-                return $v_output;
-            }
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-    }
-
 }
