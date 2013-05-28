@@ -1,0 +1,9 @@
+{
+  "name": "talis/saaspose-php",
+  "type": "library",
+  "homepage": "http://talis.com",
+  "authors": [{
+    "name": "Talis",
+    "email": "cc@talis.com"
+  }]
+}
