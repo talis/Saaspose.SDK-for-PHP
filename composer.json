@@ -2,6 +2,7 @@
   "name": "talis/saaspose-php",
   "type": "library",
   "homepage": "http://talis.com",
+  "version": "1.0.0"
   "authors": [{
     "name": "Talis",
     "email": "cc@talis.com"
